@@ -19,6 +19,7 @@ package azureblob
 import (
 	"github.com/container-storage-interface/spec/lib/go/csi"
 	"github.com/golang/glog"
+	"github.com/pborman/uuid"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -46,7 +47,6 @@ func NewControllerServer() *controllerServer {
 	return &controllerServer{
 		caps: getControllerServiceCapabilities(
 			[]csi.ControllerServiceCapability_RPC_Type{
-				csi.ControllerServiceCapability_RPC_PUBLISH_UNPUBLISH_VOLUME,
 				csi.ControllerServiceCapability_RPC_LIST_VOLUMES,
 				csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME,
 			}),
@@ -54,11 +54,23 @@ func NewControllerServer() *controllerServer {
 }
 
 func (cs *controllerServer) CreateVolume(ctx context.Context, req *csi.CreateVolumeRequest) (*csi.CreateVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
+
+	volumeID := uuid.NewUUID().String()
+
+	return &csi.CreateVolumeResponse{
+		Volume: &csi.Volume{
+			VolumeId:      volumeID,
+			CapacityBytes: req.GetCapacityRange().GetRequiredBytes(),
+			VolumeContext: req.GetParameters(),
+		},
+	}, nil
+
 }
 
 func (cs *controllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVolumeRequest) (*csi.DeleteVolumeResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
+
+	return &csi.DeleteVolumeResponse{}, nil
+
 }
 
 func (cs *controllerServer) ControllerGetCapabilities(ctx context.Context, req *csi.ControllerGetCapabilitiesRequest) (*csi.ControllerGetCapabilitiesResponse, error) {
