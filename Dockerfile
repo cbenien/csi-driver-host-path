@@ -1,8 +1,8 @@
-FROM alpine
-LABEL maintainers="Kubernetes Authors"
-LABEL description="HostPath Driver"
+FROM ubuntu
+#LABEL maintainers="Kubernetes Authors"
+LABEL description="AzureBlob Driver"
 
-# Add util-linux to get a new version of losetup.
-RUN apk add util-linux
-COPY ./bin/hostpathplugin /hostpathplugin
-ENTRYPOINT ["/hostpathplugin"]
+RUN apt update && apt install -y curl zip man
+RUN curl https://rclone.org/install.sh | bash
+COPY ./bin/azureblobplugin /azureblobplugin
+ENTRYPOINT ["/azureblobplugin"]
