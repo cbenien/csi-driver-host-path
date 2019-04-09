@@ -87,7 +87,7 @@ spec:
           args:
             - "--endpoint=$(CSI_ENDPOINT)"
             - "--nodeid=$(NODE_ID)"
-            - "--v=4"
+            - "--v=5"
           env:
             - name: CSI_ENDPOINT
               value: unix:///csi/csi.sock
@@ -99,7 +99,7 @@ spec:
             - name: plugin-dir
               mountPath: /csi
             - name: pods-mount-dir
-              mountPath: /var/lib/kubelet/pods
+              mountPath: /var/lib/kubelet
               mountPropagation: "Bidirectional"
             - name: fuse-device
               mountPath: /dev/fuse
@@ -114,7 +114,7 @@ spec:
             type: DirectoryOrCreate
         - name: pods-mount-dir
           hostPath:
-            path: /var/lib/kubelet/pods
+            path: /var/lib/kubelet
             type: Directory
         - name: fuse-device
           hostPath:
